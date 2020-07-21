@@ -1,0 +1,25 @@
+---
+# tasks file for mongodb connection
+
+- name: Deploy helm chart
+  shell: helm upgrade --install mongodb-connection-test {{ role_path }}/files/helm --recreate-pods --force --namespace {{ env[0] }} --set mongodb={{ mongodb_host }} --set admin_password={{ mongodb_admin_password }}
+
+- pause:
+    seconds: 30
+
+- name: Run mongodb-connection test
+  shell: helm test mongodb-connection-test --cleanup
+  register: test_status
+  ignore_errors: true
+
+- debug:
+    msg: test_status
+
+- name: Cleanup helm chart
+  shell: helm delete --purge mongodb-connection-test
+
+- name: Return result
+  fail:
+    msg: "Test MongoDB Connection failed"
+  failed_when: test_status.rc == 1
+
