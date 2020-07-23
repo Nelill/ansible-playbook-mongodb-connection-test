@@ -1,2 +1,4 @@
 ---
-# defaults file for nfs-test
+# defaults file for mongodb-connection-test
+mongodb_host: "{{ mongodb_host }}"
+mongodb_admin_password: "{{ mongodb_admin_password }}"
